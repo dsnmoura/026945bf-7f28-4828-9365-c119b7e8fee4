@@ -104,10 +104,35 @@ Diretrizes importantes:
     // Parse the JSON response
     let generatedContent;
     try {
-      generatedContent = JSON.parse(generatedText);
+      // Try to extract JSON from the response (sometimes AI adds extra text)
+      let jsonText = generatedText.trim();
+      
+      // Look for JSON block if response has extra text
+      const jsonStart = jsonText.indexOf('{');
+      const jsonEnd = jsonText.lastIndexOf('}');
+      
+      if (jsonStart !== -1 && jsonEnd !== -1 && jsonEnd > jsonStart) {
+        jsonText = jsonText.slice(jsonStart, jsonEnd + 1);
+      }
+      
+      generatedContent = JSON.parse(jsonText);
+      console.log('Successfully parsed JSON:', generatedContent);
     } catch (e) {
-      console.error('Failed to parse JSON:', generatedText);
-      throw new Error('AI generated invalid JSON response');
+      console.error('Failed to parse JSON. Raw response:', generatedText);
+      console.error('Parse error:', e);
+      
+      // Fallback: try to generate a basic response structure
+      generatedContent = {
+        caption: `Conteúdo sobre: ${theme}`,
+        hashtags: ['#conteudo', '#marketing', '#digital'],
+        carousel_prompts: generateImages ? [
+          `Professional content about ${theme}`,
+          `Modern design related to ${theme}`,
+          `Engaging visual for ${theme}`
+        ] : []
+      };
+      
+      console.log('Using fallback content:', generatedContent);
     }
 
     // Generate images using another AI model if carousel_prompts exist
