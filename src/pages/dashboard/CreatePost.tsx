@@ -327,7 +327,7 @@ const CreatePost = () => {
                   onClick={generateContent}
                   disabled={isGenerating}
                   size="lg"
-                  className="bg-gradient-primary"
+                  className="gradient-primary"
                 >
                   {isGenerating ? (
                     <>
@@ -401,7 +401,7 @@ const CreatePost = () => {
                 <Button variant="secondary">
                   Baixar Imagem
                 </Button>
-                <Button className="bg-gradient-primary">
+                <Button className="gradient-primary">
                   Publicar Agora
                 </Button>
               </div>
