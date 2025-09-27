@@ -1,7 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Sparkles, Menu } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Link } from "react-router-dom";
 
 const Header = () => {
+  const { user, signOut } = useAuth();
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -31,12 +39,25 @@ const Header = () => {
 
           {/* CTA Buttons */}
           <div className="flex items-center space-x-4">
-            <Button variant="ghost" className="hidden sm:inline-flex">
-              <a href="/dashboard">Entrar</a>
-            </Button>
-            <Button variant="gradient">
-              <a href="/dashboard">Dashboard</a>
-            </Button>
+            {user ? (
+              <>
+                <Button variant="ghost" className="hidden sm:inline-flex" onClick={handleSignOut}>
+                  Sair
+                </Button>
+                <Button asChild className="gradient-primary">
+                  <Link to="/dashboard">Dashboard</Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button variant="ghost" className="hidden sm:inline-flex" asChild>
+                  <Link to="/auth">Entrar</Link>
+                </Button>
+                <Button asChild className="gradient-primary">
+                  <Link to="/auth">Começar Grátis</Link>
+                </Button>
+              </>
+            )}
             
             {/* Mobile menu button */}
             <Button variant="ghost" size="icon" className="md:hidden">
